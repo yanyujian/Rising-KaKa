@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 import time
 import random
 from glob import glob
@@ -20,24 +21,42 @@ window.wm_attributes("-transparentcolor", "white")
 # 定位到右下角展示
 screenWidth = window.winfo_screenwidth()
 screenHeight = window.winfo_screenheight()
-window.geometry(f"+{screenWidth - 400}+{screenHeight - 300}")
-
+window.geometry(f"+{screenWidth - 300}+{screenHeight - 300}")
 
 # 菜单kaishi
 
 # Create a right-click context menu
 menu = tk.Menu(window, tearoff=0)
-menu.add_command(label="Option 1", command=lambda: print("Option 1 selected"))
-menu.add_command(label="Option 2", command=lambda: print("Option 2 selected"))
+menu.add_command(label="Exit", command=lambda: window.destroy())
+
 
 # Function to show the context menu
 def show_menu(event):
     menu.post(event.x_root, event.y_root)
 
+
 # Bind the show_menu function to the window
 window.bind('<Button-3>', show_menu)
 
 # 菜单结束
+
+
+# 底部菜单
+
+import pystray
+from pystray import MenuItem as item
+
+
+def on_select(icon, item):
+    icon.stop()
+    window.destroy()
+    sys.exit()
+
+
+tryImage = Image.open('D:/develop/opensourcetools/Rising-KaKa/Resources/png/Hello/0.png')
+trayMenu = (item('Exit', on_select), item('Open', on_select))
+icon = pystray.Icon("name", tryImage, "Lion", trayMenu)
+icon.run()
 
 
 def moveWindow(event):

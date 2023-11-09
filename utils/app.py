@@ -9,6 +9,7 @@ from apng import APNG
 from PIL import Image, ImageTk
 import io
 import tkinter as tk
+import threading
 
 window = tk.Tk()
 window.overrideredirect(True)
@@ -49,14 +50,15 @@ from pystray import MenuItem as item
 
 def on_select(icon, item):
     icon.stop()
-    window.destroy()
-    sys.exit()
+    window.after(1, window.destroy)
+    # sys.exit()
 
 
 tryImage = Image.open('D:/develop/opensourcetools/Rising-KaKa/Resources/png/Hello/0.png')
 trayMenu = (item('Exit', on_select), item('Open', on_select))
 icon = pystray.Icon("name", tryImage, "Lion", trayMenu)
-icon.run()
+# icon.run() # 直接调用就阻塞了
+threading.Thread(target=icon.run).start()
 
 
 def moveWindow(event):
@@ -91,6 +93,9 @@ def startKakaAnimation():
         for fileName in fileList:
             if fileName.endswith('.png'):
                 startAnimation(os.path.join(resourceFolder, fileName))
+            if os.path.exists("stop"):
+                os.remove("stop")
+                on_select(icon, "StopFileDetected")
             # time.sleep(random.randint(1, 120))  # 动画切换时间
 
 
@@ -100,6 +105,5 @@ def generateApng():
     for key in data.keys():
         files = glob('./Resources/png/{}/*.png'.format(key))
         files.sort(key=lambda x: int(os.path.split(x)[1][:-4]))
-
         APNG.from_files(files, delay=1, delay_den=int(data[key]['FrameRate'])).save(
             "./Resources/apng/{}.png".format(key))

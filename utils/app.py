@@ -20,7 +20,24 @@ window.wm_attributes("-transparentcolor", "white")
 # 定位到右下角展示
 screenWidth = window.winfo_screenwidth()
 screenHeight = window.winfo_screenheight()
-window.geometry(f"+{screenWidth - 200}+{screenHeight - 200}")
+window.geometry(f"+{screenWidth - 400}+{screenHeight - 300}")
+
+
+# 菜单kaishi
+
+# Create a right-click context menu
+menu = tk.Menu(window, tearoff=0)
+menu.add_command(label="Option 1", command=lambda: print("Option 1 selected"))
+menu.add_command(label="Option 2", command=lambda: print("Option 2 selected"))
+
+# Function to show the context menu
+def show_menu(event):
+    menu.post(event.x_root, event.y_root)
+
+# Bind the show_menu function to the window
+window.bind('<Button-3>', show_menu)
+
+# 菜单结束
 
 
 def moveWindow(event):
@@ -36,6 +53,9 @@ def startAnimation(filePath):
         img = Image.open(io.BytesIO(frame.to_bytes()))
         tkImage = ImageTk.PhotoImage(img)
         # window.geometry("{}x{}+{}+{}".format(infor.width, infor.height, infor.x_offset, infor.y_offset))
+        # x = window.winfo_x()
+        # y = window.winfo_y()
+        # window.geometry(f'+{x}+{y}')
         label = tk.Label(window, image=tkImage, bg='white')
         label.pack()
         window.update()
